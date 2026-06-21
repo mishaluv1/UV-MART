@@ -1,0 +1,230 @@
+<div class="page-wrapper product-detail-page">
+  <div class="container">
+    @if (!product()) {
+    <div class="loading-state">
+      <div class="skeleton" style="height: 400px; width: 100%;"></div>
+    </div>
+    } @else {
+    <!-- Breadcrumb -->
+    <div class="breadcrumb" @fadeIn>
+      <a routerLink="/">Home</a>
+      <span class="material-symbols-rounded">chevron_right</span>
+      <a routerLink="/products">Products</a>
+      <span class="material-symbols-rounded">chevron_right</span>
+      <a [routerLink]="['/products']" [queryParams]="{category: product()!.category}">{{ product()!.category }}</a>
+      <span class="material-symbols-rounded">chevron_right</span>
+      <span class="current">{{ product()!.name }}</span>
+    </div>
+
+    <div class="product-detail">
+      <!-- Image Gallery -->
+      <div class="product-gallery" @fadeInLeft>
+        <div class="main-image">
+          @if (product()!.discount > 0) {
+          <span class="badge badge-red discount-badge">-{{ product()!.discount }}%</span>
+          }
+          <img [src]="product()!.images[selectedImage()]" [alt]="product()!.name" />
+        </div>
+        <div class="thumbnails">
+          @for (img of product()!.images; track img; let i = $index) {
+          <button class="thumb" [class.active]="selectedImage() === i" (click)="selectedImage.set(i)">
+            <img [src]="img" [alt]="product()!.name + ' ' + (i + 1)" />
+          </button>
+          }
+        </div>
+      </div>
+
+      <!-- Product Info -->
+      <div class="product-info" @fadeInRight>
+        <span class="product-category-badge">{{ product()!.category }}</span>
+        <h1 class="product-title">{{ product()!.name }}</h1>
+
+        <!-- Rating -->
+        <div class="product-rating-row">
+          <div class="stars">
+            @for (star of getStars(product()!.rating); track star) {
+            <span class="star" [class.filled]="star <= product()!.rating">★</span>
+            }
+          </div>
+          <span class="rating-value">{{ product()!.rating }}</span>
+          <span class="rating-count">({{ product()!.reviews }} reviews)</span>
+        </div>
+
+        <!-- Price -->
+        <div class="product-price-row">
+          <span class="current-price">${{ product()!.price }}</span>
+          @if (product()!.originalPrice > product()!.price) {
+          <span class="original-price">${{ product()!.originalPrice }}</span>
+          <span class="badge badge-green save-badge">Save ${{ product()!.originalPrice - product()!.price }}</span>
+          }
+        </div>
+
+        <p class="product-description">{{ product()!.description }}</p>
+
+        <!-- Color Selection -->
+        <div class="option-group">
+          <h4>Color: <span class="selected-option">{{ selectedColor() }}</span></h4>
+          <div class="color-options">
+            @for (color of product()!.colors; track color.hex) {
+            <button class="color-btn" [class.active]="selectedColor() === color.name" [style.background]="color.hex"
+              [title]="color.name" (click)="selectedColor.set(color.name)">
+              @if (selectedColor() === color.name) {
+              <span class="material-symbols-rounded">check</span>
+              }
+            </button>
+            }
+          </div>
+        </div>
+
+        <!-- Size Selection -->
+        <div class="option-group">
+          <h4>Size: <span class="selected-option">{{ selectedSize() }}</span></h4>
+          <div class="size-options">
+            @for (size of product()!.sizes; track size) {
+            <button class="size-btn" [class.active]="selectedSize() === size" (click)="selectedSize.set(size)">
+              {{ size }}
+            </button>
+            }
+          </div>
+        </div>
+
+        <!-- Quantity -->
+        <div class="option-group">
+          <h4>Quantity</h4>
+          <div class="qty-selector">
+            <button class="qty-btn" (click)="decrementQty()">
+              <span class="material-symbols-rounded">remove</span>
+            </button>
+            <span class="qty-value">{{ quantity() }}</span>
+            <button class="qty-btn" (click)="incrementQty()">
+              <span class="material-symbols-rounded">add</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="product-actions">
+          <button class="btn btn-primary btn-lg add-to-cart-btn" (click)="addToCart()">
+            <span class="material-symbols-rounded">shopping_bag</span>
+            Add to Cart — ${{ (product()!.price * quantity()).toFixed(2) }}
+          </button>
+          <button class="btn btn-outline btn-lg wishlist-btn">
+            <span class="material-symbols-rounded">favorite</span>
+          </button>
+        </div>
+
+        <!-- Features -->
+        <div class="product-features">
+          <div class="feature">
+            <span class="material-symbols-rounded">local_shipping</span>
+            <span>Free shipping on orders over $50</span>
+          </div>
+          <div class="feature">
+            <span class="material-symbols-rounded">replay</span>
+            <span>30-day easy returns</span>
+          </div>
+          <div class="feature">
+            <span class="material-symbols-rounded">verified</span>
+            <span>100% authentic guarantee</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="product-tabs" @fadeInUp>
+      <div class="tabs-header">
+        <button class="tab-btn" [class.active]="activeTab() === 'description'"
+          (click)="activeTab.set('description')">Description</button>
+        <button class="tab-btn" [class.active]="activeTab() === 'reviews'" (click)="activeTab.set('reviews')">
+          Reviews ({{ productReviews().length }})
+        </button>
+        <button class="tab-btn" [class.active]="activeTab() === 'shipping'" (click)="activeTab.set('shipping')">Shipping
+          & Returns</button>
+      </div>
+
+      <div class="tabs-content">
+        @if (activeTab() === 'description') {
+        <div class="tab-panel" @fadeIn>
+          <p>{{ product()!.description }} Experience the difference with premium materials and expert craftsmanship. Our
+            {{ product()!.name }} is designed to provide exceptional comfort, durability, and style for everyday use.
+          </p>
+          <ul class="feature-list">
+            <li>Premium quality materials</li>
+            <li>Expert craftsmanship</li>
+            <li>Designed for durability</li>
+            <li>Comfortable and stylish</li>
+            <li>Perfect for everyday use</li>
+          </ul>
+        </div>
+        }
+
+        @if (activeTab() === 'reviews') {
+        <div class="tab-panel" @fadeIn>
+          <div class="reviews-summary">
+            <div class="reviews-score">
+              <span class="score-number">{{ getAverageRating() }}</span>
+              <div class="score-stars">
+                @for (star of getStars(getAverageRating()); track star) {
+                <span class="star filled">★</span>
+                }
+              </div>
+              <span class="score-total">{{ productReviews().length }} reviews</span>
+            </div>
+          </div>
+          <div class="reviews-list" @staggerList>
+            @for (review of productReviews(); track review.id) {
+            <div class="review-card" @fadeInUp>
+              <div class="review-header">
+                <img [src]="review.avatar" [alt]="review.user" class="review-avatar" />
+                <div>
+                  <strong>{{ review.user }}</strong>
+                  <span class="review-date">{{ review.date | date }}</span>
+                </div>
+                <div class="review-stars">
+                  @for (star of getStars(review.rating); track star) {
+                  <span class="star" [class.filled]="star <= review.rating">★</span>
+                  }
+                </div>
+              </div>
+              <p class="review-text">{{ review.comment }}</p>
+            </div>
+            }
+          </div>
+        </div>
+        }
+
+        @if (activeTab() === 'shipping') {
+        <div class="tab-panel" @fadeIn>
+          <h4>Shipping Information</h4>
+          <p>We offer free standard shipping on all orders over $50. Orders are processed within 1-2 business days.</p>
+          <ul class="feature-list">
+            <li>Standard Shipping: 5-7 business days (Free over $50)</li>
+            <li>Express Shipping: 2-3 business days ($12.99)</li>
+            <li>Overnight Shipping: Next business day ($24.99)</li>
+          </ul>
+          <h4>Returns Policy</h4>
+          <p>We accept returns within 30 days of delivery. Items must be unused and in original packaging. Refunds are
+            processed within 5-7 business days.</p>
+        </div>
+        }
+      </div>
+    </div>
+
+    <!-- Related Products -->
+    @if (relatedProducts().length > 0) {
+    <section class="section related-section">
+      <div class="section-header" @fadeInUp>
+        <h2>You May Also Like</h2>
+        <p>Similar products you might be interested in</p>
+      </div>
+      <div class="products-grid grid-4" @staggerList>
+        @for (rp of relatedProducts(); track rp.id) {
+        <app-product-card [product]="rp" />
+        }
+      </div>
+    </section>
+    }
+    }
+  </div>
+</div>

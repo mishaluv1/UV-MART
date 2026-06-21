@@ -1,0 +1,282 @@
+<!-- Hero Section -->
+<section class="hero" @fadeIn>
+  <div class="hero-bg">
+    <div class="hero-glow-1"></div>
+    <div class="hero-glow-2"></div>
+    <div class="hero-particles">
+      <span class="particle" style="top:10%;left:10%;animation-delay:0s"></span>
+      <span class="particle" style="top:20%;left:80%;animation-delay:0.5s"></span>
+      <span class="particle" style="top:60%;left:15%;animation-delay:1s"></span>
+      <span class="particle" style="top:70%;left:75%;animation-delay:1.5s"></span>
+      <span class="particle" style="top:40%;left:50%;animation-delay:2s"></span>
+      <span class="particle" style="top:80%;left:40%;animation-delay:2.5s"></span>
+    </div>
+  </div>
+  <div class="container hero-content">
+    <div class="hero-text" @fadeInLeft>
+      <span class="badge badge-accent hero-badge">
+        <span class="material-symbols-rounded" style="font-size:16px">bolt</span>
+        Summer Sale — Up to 50% Off
+      </span>
+      <h1 class="hero-title">
+        Discover Your
+        <span class="hero-gradient">Perfect Style</span>
+      </h1>
+      <p class="hero-subtitle">
+        Explore our curated collection of premium products. From fashion to electronics,
+        find everything you need with fast delivery and exceptional quality.
+      </p>
+      <div class="hero-actions">
+        <a routerLink="/products" class="btn btn-primary btn-lg">
+          Shop Now
+          <span class="material-symbols-rounded">arrow_forward</span>
+        </a>
+        <a routerLink="/products" [queryParams]="{category: 'fashion'}" class="btn btn-outline btn-lg">
+          Explore Fashion
+          <span class="material-symbols-rounded">checkroom</span>
+        </a>
+      </div>
+      <div class="hero-stats">
+        @for (stat of stats; track stat.label) {
+        <div class="hero-stat">
+          <span class="stat-value">{{ stat.value }}</span>
+          <span class="stat-label">{{ stat.label }}</span>
+        </div>
+        }
+      </div>
+    </div>
+    <div class="hero-visual" @fadeInRight>
+      <div class="hero-image-wrapper">
+        <div class="hero-image-ring"></div>
+        <img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?w=600&h=600&fit=crop" alt="Shopping"
+          class="hero-main-img" />
+        <div class="hero-float-card card-1">
+          <span class="material-symbols-rounded">local_shipping</span>
+          <span>Free Shipping</span>
+        </div>
+        <div class="hero-float-card card-2">
+          <span class="material-symbols-rounded">verified</span>
+          <span>100% Authentic</span>
+        </div>
+        <div class="hero-float-card card-3">
+          <span class="material-symbols-rounded">replay</span>
+          <span>Easy Returns</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <span class="material-symbols-rounded">keyboard_arrow_down</span>
+    <span>Scroll to explore</span>
+  </div>
+</section>
+
+<!-- Categories Section -->
+<section class="section categories-section">
+  <div class="container">
+    <div class="section-header" @fadeInUp>
+      <h2>Shop by Category</h2>
+      <p>Browse our wide range of categories and find exactly what you're looking for</p>
+    </div>
+    <div class="categories-grid" @staggerList>
+      @for (cat of categories; track cat.id) {
+      <a [routerLink]="['/products']" [queryParams]="{category: cat.slug}" class="category-card" @scaleIn>
+        <div class="category-image">
+          <img [src]="cat.image" [alt]="cat.name" loading="lazy" />
+          <div class="category-overlay"></div>
+        </div>
+        <div class="category-info">
+          <span class="category-icon">{{ cat.icon }}</span>
+          <h3>{{ cat.name }}</h3>
+          <span class="category-count">{{ cat.productCount }} Products</span>
+        </div>
+      </a>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- Featured Products -->
+<section class="section featured-section">
+  <div class="container">
+    <div class="section-header" @fadeInUp>
+      <span class="badge badge-primary">Featured</span>
+      <h2>Trending Products</h2>
+      <p>Our most popular picks, handpicked just for you</p>
+    </div>
+    <div class="products-grid grid-4" @staggerList>
+      @for (product of featuredProducts; track product.id) {
+      <app-product-card [product]="product" />
+      }
+    </div>
+    <div class="section-cta" @fadeInUp>
+      <a routerLink="/products" class="btn btn-outline btn-lg">
+        View All Products
+        <span class="material-symbols-rounded">arrow_forward</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Promo Banner -->
+<section class="promo-section" @fadeIn>
+  <div class="container">
+    <div class="promo-banner">
+      <div class="promo-content">
+        <span class="badge badge-orange promo-badge">Limited Time</span>
+        <h2>Summer Mega Sale</h2>
+        <p>Get up to 50% off on selected items. Free shipping on orders over $50. Don't miss out!</p>
+        <div class="promo-timer">
+          <div class="timer-block"><span>03</span><small>Days</small></div>
+          <div class="timer-block"><span>12</span><small>Hours</small></div>
+          <div class="timer-block"><span>45</span><small>Mins</small></div>
+          <div class="timer-block"><span>30</span><small>Secs</small></div>
+        </div>
+        <a routerLink="/products" class="btn btn-primary btn-lg">
+          Grab the Deal
+          <span class="material-symbols-rounded">bolt</span>
+        </a>
+      </div>
+      <div class="promo-visual">
+        <img src="https://images.unsplash.com/photo-1607082349566-187342175e2f?w=500&h=500&fit=crop" alt="Sale" />
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Best Sellers -->
+<section class="section best-sellers-section">
+  <div class="container">
+    <div class="section-header" @fadeInUp>
+      <span class="badge badge-orange">Popular</span>
+      <h2>Best Sellers</h2>
+      <p>Our customers love these products. See what everyone's buying</p>
+    </div>
+    <div class="products-grid grid-4" @staggerList>
+      @for (product of bestSellers; track product.id) {
+      <app-product-card [product]="product" />
+      }
+    </div>
+  </div>
+</section>
+
+<!-- Features Banner -->
+<section class="features-bar" @fadeIn>
+  <div class="container">
+    <div class="features-grid">
+      <div class="feature-item">
+        <span class="material-symbols-rounded feature-icon">local_shipping</span>
+        <div>
+          <h4>Free Shipping</h4>
+          <p>On orders over $50</p>
+        </div>
+      </div>
+      <div class="feature-item">
+        <span class="material-symbols-rounded feature-icon">replay</span>
+        <div>
+          <h4>Easy Returns</h4>
+          <p>30-day return policy</p>
+        </div>
+      </div>
+      <div class="feature-item">
+        <span class="material-symbols-rounded feature-icon">shield</span>
+        <div>
+          <h4>Secure Payment</h4>
+          <p>100% protected</p>
+        </div>
+      </div>
+      <div class="feature-item">
+        <span class="material-symbols-rounded feature-icon">support_agent</span>
+        <div>
+          <h4>24/7 Support</h4>
+          <p>Always here to help</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- New Arrivals -->
+<section class="section new-arrivals-section">
+  <div class="container">
+    <div class="section-header" @fadeInUp>
+      <span class="badge badge-accent">Fresh</span>
+      <h2>New Arrivals</h2>
+      <p>Be the first to shop our latest collection of premium products</p>
+    </div>
+    <div class="products-grid grid-4" @staggerList>
+      @for (product of newArrivals; track product.id) {
+      <app-product-card [product]="product" />
+      }
+    </div>
+  </div>
+</section>
+
+<!-- Testimonials -->
+<section class="section testimonials-section">
+  <div class="container">
+    <div class="section-header" @fadeInUp>
+      <span class="badge badge-green">Testimonials</span>
+      <h2>What Our Customers Say</h2>
+      <p>Real feedback from real people who love shopping with us</p>
+    </div>
+    <div class="testimonials-grid" @staggerList>
+      @for (t of testimonials; track t.name) {
+      <div class="testimonial-card" @fadeInUp>
+        <div class="testimonial-stars">
+          @for (s of [1,2,3,4,5]; track s) {
+          <span class="star filled">★</span>
+          }
+        </div>
+        <p class="testimonial-text">"{{ t.text }}"</p>
+        <div class="testimonial-author">
+          <img [src]="t.avatar" [alt]="t.name" />
+          <div>
+            <strong>{{ t.name }}</strong>
+            <span>{{ t.role }}</span>
+          </div>
+        </div>
+      </div>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- Brands -->
+<section class="section brands-section" @fadeIn>
+  <div class="container">
+    <div class="section-header">
+      <h2>Trusted Brands</h2>
+      <p>We partner with the world's leading brands</p>
+    </div>
+    <div class="brands-scroll">
+      <div class="brands-track">
+        @for (brand of brands; track $index) {
+        <div class="brand-item">
+          <span class="brand-logo">{{ brand.logo }}</span>
+          <span class="brand-name">{{ brand.name }}</span>
+        </div>
+        }
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Newsletter CTA -->
+<section class="newsletter-section" @fadeIn>
+  <div class="container">
+    <div class="newsletter-card">
+      <div class="newsletter-content">
+        <span class="material-symbols-rounded newsletter-icon">mail</span>
+        <h2>Stay in the Loop</h2>
+        <p>Subscribe to our newsletter for exclusive deals, new arrivals, and insider tips delivered straight to your
+          inbox.</p>
+        <div class="newsletter-input-group">
+          <input type="email" placeholder="Enter your email address" class="nl-input" />
+          <button class="btn btn-primary">Subscribe</button>
+        </div>
+        <span class="newsletter-note">No spam, unsubscribe anytime. Read our <a href="#">privacy policy</a>.</span>
+      </div>
+    </div>
+  </div>
+</section>

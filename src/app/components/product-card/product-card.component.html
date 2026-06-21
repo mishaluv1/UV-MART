@@ -1,0 +1,83 @@
+<div class="product-card" @scaleIn
+     [class.hovered]="hovered"
+     (mouseenter)="hovered = true"
+     (mouseleave)="hovered = false; imageIndex = 0">
+
+  <!-- Image Section -->
+  <a [routerLink]="['/product', product.slug]" class="product-image-wrapper">
+    <img [src]="product.images[imageIndex]" [alt]="product.name" class="product-image" />
+    <img [src]="product.images[0]" [alt]="product.name" class="product-image-hover" />
+
+    <!-- Badges -->
+    <div class="product-badges">
+      @if (product.discount > 0) {
+        <span class="badge badge-red">{{ discountLabel }}</span>
+      }
+      @if (product.newArrival) {
+        <span class="badge badge-accent">New</span>
+      }
+      @if (product.bestSeller) {
+        <span class="badge badge-orange">Best Seller</span>
+      }
+    </div>
+
+    <!-- Image Navigation -->
+    @if (hovered && product.images.length > 1) {
+      <div class="image-nav" @scaleIn>
+        <button class="img-nav-btn" (click)="$event.preventDefault(); prevImage()">
+          <span class="material-symbols-rounded">chevron_left</span>
+        </button>
+        <button class="img-nav-btn" (click)="$event.preventDefault(); nextImage()">
+          <span class="material-symbols-rounded">chevron_right</span>
+        </button>
+      </div>
+    }
+
+    <!-- Quick Actions -->
+    <div class="quick-actions" [class.visible]="hovered">
+      <button class="quick-btn" (click)="$event.preventDefault(); cartService.addToCart(product, 1)" title="Add to Cart">
+        <span class="material-symbols-rounded">shopping_bag</span>
+      </button>
+      <button class="quick-btn" (click)="$event.preventDefault()" title="Add to Wishlist">
+        <span class="material-symbols-rounded">favorite</span>
+      </button>
+      <a [routerLink]="['/product', product.slug]" class="quick-btn" title="Quick View">
+        <span class="material-symbols-rounded">visibility</span>
+      </a>
+    </div>
+  </a>
+
+  <!-- Info Section -->
+  <div class="product-info">
+    <span class="product-category">{{ product.category }}</span>
+    <a [routerLink]="['/product', product.slug]" class="product-name">{{ product.name }}</a>
+
+    <!-- Rating -->
+    <div class="product-rating">
+      <div class="stars">
+        @for (star of [1,2,3,4,5]; track star) {
+          <span class="star" [class.filled]="star <= product.rating">★</span>
+        }
+      </div>
+      <span class="rating-count">({{ product.reviews }})</span>
+    </div>
+
+    <!-- Price -->
+    <div class="product-price">
+      <span class="current-price">${{ product.price }}</span>
+      @if (product.originalPrice > product.price) {
+        <span class="original-price">${{ product.originalPrice }}</span>
+      }
+    </div>
+
+    <!-- Colors -->
+    <div class="product-colors">
+      @for (color of product.colors.slice(0, 4); track color.hex) {
+        <span class="color-dot" [style.background]="color.hex" [title]="color.name"></span>
+      }
+      @if (product.colors.length > 4) {
+        <span class="color-more">+{{ product.colors.length - 4 }}</span>
+      }
+    </div>
+  </div>
+</div>

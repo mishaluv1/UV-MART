@@ -1,0 +1,121 @@
+<header class="header" [class.scrolled]="scrolled">
+  <div class="header-inner container">
+    <!-- Logo -->
+    <a routerLink="/" class="logo" @fadeIn>
+      <span class="logo-icon">◆</span>
+      <span class="logo-text">UV-MART</span>
+    </a>
+
+    <!-- Desktop Navigation -->
+    <nav class="nav-desktop" @fadeIn>
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link">
+        <span class="material-symbols-rounded nav-icon">home</span>
+        Home
+      </a>
+      <a routerLink="/products" routerLinkActive="active" class="nav-link">
+        <span class="material-symbols-rounded nav-icon">inventory_2</span>
+        Products
+      </a>
+      <a routerLink="/products" [queryParams]="{category: 'electronics'}" routerLinkActive="active" class="nav-link">
+        <span class="material-symbols-rounded nav-icon">devices</span>
+        Electronics
+      </a>
+      <a routerLink="/products" [queryParams]="{category: 'fashion'}" routerLinkActive="active" class="nav-link">
+        <span class="material-symbols-rounded nav-icon">checkroom</span>
+        Fashion
+      </a>
+    </nav>
+
+    <!-- Right Actions -->
+    <div class="header-actions" @fadeIn>
+      <!-- Search -->
+      <button class="btn-icon" (click)="toggleSearch()" aria-label="Search">
+        <span class="material-symbols-rounded">search</span>
+      </button>
+
+      <!-- Wishlist -->
+      <button class="btn-icon" aria-label="Wishlist">
+        <span class="material-symbols-rounded">favorite</span>
+      </button>
+
+      <!-- Account -->
+      <a routerLink="/login" class="btn-icon" aria-label="Account">
+        <span class="material-symbols-rounded">person</span>
+      </a>
+
+      <!-- Cart -->
+      <button class="btn-icon cart-btn" (click)="cartService.toggleCart()" aria-label="Cart">
+        <span class="material-symbols-rounded">shopping_bag</span>
+        @if (cartService.totalItems() > 0) {
+        <span class="cart-badge" @fadeIn>{{ cartService.totalItems() }}</span>
+        }
+      </button>
+
+      <!-- Mobile Menu Toggle -->
+      <button class="btn-icon mobile-toggle" (click)="toggleMobileMenu()" aria-label="Menu">
+        <span class="material-symbols-rounded">{{ mobileMenuOpen ? 'close' : 'menu' }}</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Search Overlay -->
+  @if (searchOpen) {
+  <div class="search-overlay" @overlayFade>
+    <div class="search-bar">
+      <span class="material-symbols-rounded search-icon">search</span>
+      <input id="searchInput" type="text" [(ngModel)]="searchQuery"
+        placeholder="Search for products, brands, categories..." class="search-input" (keyup.escape)="closeSearch()" />
+      <button class="btn-icon" (click)="closeSearch()">
+        <span class="material-symbols-rounded">close</span>
+      </button>
+    </div>
+  </div>
+  }
+
+  <!-- Mobile Menu -->
+  @if (mobileMenuOpen) {
+  <div class="mobile-menu" @slideInOut>
+    <div class="mobile-menu-content">
+      <a routerLink="/" (click)="mobileMenuOpen = false" class="mobile-link">
+        <span class="material-symbols-rounded">home</span> Home
+      </a>
+      <a routerLink="/products" (click)="mobileMenuOpen = false" class="mobile-link">
+        <span class="material-symbols-rounded">inventory_2</span> All Products
+      </a>
+      <a routerLink="/products" [queryParams]="{category: 'electronics'}" (click)="mobileMenuOpen = false"
+        class="mobile-link">
+        <span class="material-symbols-rounded">devices</span> Electronics
+      </a>
+      <a routerLink="/products" [queryParams]="{category: 'fashion'}" (click)="mobileMenuOpen = false"
+        class="mobile-link">
+        <span class="material-symbols-rounded">checkroom</span> Fashion
+      </a>
+      <a routerLink="/products" [queryParams]="{category: 'home-living'}" (click)="mobileMenuOpen = false"
+        class="mobile-link">
+        <span class="material-symbols-rounded">chair</span> Home & Living
+      </a>
+      <a routerLink="/products" [queryParams]="{category: 'sports'}" (click)="mobileMenuOpen = false"
+        class="mobile-link">
+        <span class="material-symbols-rounded">fitness_center</span> Sports
+      </a>
+      <a routerLink="/products" [queryParams]="{category: 'beauty'}" (click)="mobileMenuOpen = false"
+        class="mobile-link">
+        <span class="material-symbols-rounded">spa</span> Beauty
+      </a>
+      <div class="mobile-divider"></div>
+      <a routerLink="/cart" (click)="mobileMenuOpen = false" class="mobile-link">
+        <span class="material-symbols-rounded">shopping_bag</span> Cart
+        @if (cartService.totalItems() > 0) {
+        <span class="mobile-cart-count">({{ cartService.totalItems() }})</span>
+        }
+      </a>
+      <a routerLink="/login" (click)="mobileMenuOpen = false" class="mobile-link">
+        <span class="material-symbols-rounded">person</span> Sign In
+      </a>
+    </div>
+  </div>
+  }
+
+  <!-- Cart Sidebar -->
+  <app-cart-sidebar />
+</header>

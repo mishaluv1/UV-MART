@@ -1,0 +1,324 @@
+<div class="page-wrapper checkout-page">
+  <div class="container">
+    <div class="breadcrumb" @fadeIn>
+      <a routerLink="/">Home</a>
+      <span class="material-symbols-rounded">chevron_right</span>
+      <a routerLink="/cart">Cart</a>
+      <span class="material-symbols-rounded">chevron_right</span>
+      <span class="current">Checkout</span>
+    </div>
+
+    <h1 class="page-title" @fadeInUp>Checkout</h1>
+
+    @if (currentStep() !== 'success') {
+    <!-- Progress Steps -->
+    <div class="checkout-steps" @fadeIn>
+      @for (step of steps; track step.key; let i = $index) {
+      <div class="step" [class.completed]="i < currentStepIndex()" [class.active]="i === currentStepIndex()">
+        <div class="step-indicator">
+          @if (i < currentStepIndex()) { <span class="material-symbols-rounded">check</span>
+            } @else {
+            <span class="material-symbols-rounded">{{ step.icon }}</span>
+            }
+        </div>
+        <div class="step-label">
+          <span class="step-number">Step {{ i + 1 }}</span>
+          <span class="step-name">{{ step.label }}</span>
+        </div>
+      </div>
+      }
+    </div>
+
+    <div class="checkout-layout">
+      <!-- Main Form -->
+      <div class="checkout-main" @fadeInLeft>
+        <!-- Shipping Step -->
+        @if (currentStep() === 'shipping') {
+        <div class="checkout-section">
+          <h2>Shipping Information</h2>
+          <form [formGroup]="shippingForm" class="checkout-form">
+            <div class="form-row">
+              <div class="form-group">
+                <label>First Name *</label>
+                <input type="text" formControlName="firstName" placeholder="John" />
+                @if (shippingForm.get('firstName')?.touched && shippingForm.get('firstName')?.invalid) {
+                <span class="error">Required</span>
+                }
+              </div>
+              <div class="form-group">
+                <label>Last Name *</label>
+                <input type="text" formControlName="lastName" placeholder="Doe" />
+                @if (shippingForm.get('lastName')?.touched && shippingForm.get('lastName')?.invalid) {
+                <span class="error">Required</span>
+                }
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Email *</label>
+                <input type="email" formControlName="email" placeholder="john@example.com" />
+                @if (shippingForm.get('email')?.touched && shippingForm.get('email')?.invalid) {
+                <span class="error">Valid email required</span>
+                }
+              </div>
+              <div class="form-group">
+                <label>Phone *</label>
+                <input type="tel" formControlName="phone" placeholder="+1 (555) 000-0000" />
+                @if (shippingForm.get('phone')?.touched && shippingForm.get('phone')?.invalid) {
+                <span class="error">Required</span>
+                }
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Address *</label>
+              <input type="text" formControlName="address" placeholder="123 Main Street" />
+              @if (shippingForm.get('address')?.touched && shippingForm.get('address')?.invalid) {
+              <span class="error">Required</span>
+              }
+            </div>
+            <div class="form-row form-row-3">
+              <div class="form-group">
+                <label>City *</label>
+                <input type="text" formControlName="city" placeholder="New York" />
+              </div>
+              <div class="form-group">
+                <label>State *</label>
+                <input type="text" formControlName="state" placeholder="NY" />
+              </div>
+              <div class="form-group">
+                <label>ZIP *</label>
+                <input type="text" formControlName="zip" placeholder="10001" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Country *</label>
+              <select formControlName="country">
+                <option value="US">United States</option>
+                <option value="CA">Canada</option>
+                <option value="UK">United Kingdom</option>
+                <option value="AU">Australia</option>
+                <option value="DE">Germany</option>
+                <option value="FR">France</option>
+              </select>
+            </div>
+          </form>
+        </div>
+        }
+
+        <!-- Payment Step -->
+        @if (currentStep() === 'payment') {
+        <div class="checkout-section">
+          <h2>Payment Information</h2>
+
+          <!-- Payment Method Selector -->
+          <div class="payment-methods">
+            <label class="payment-method-option" [class.active]="paymentMethod() === 'card'">
+              <input type="radio" name="paymentMethod" value="card" [checked]="paymentMethod() === 'card'"
+                (change)="setPaymentMethod('card')" />
+              <span class="payment-method-icon">
+                <span class="material-symbols-rounded">credit_card</span>
+              </span>
+              <div class="payment-method-content">
+                <span class="payment-method-title">Credit / Debit Card</span>
+                <span class="payment-method-desc">Pay securely with your card</span>
+              </div>
+              <span class="payment-method-check">
+                <span class="material-symbols-rounded">check_circle</span>
+              </span>
+            </label>
+
+            <label class="payment-method-option" [class.active]="paymentMethod() === 'cod'">
+              <input type="radio" name="paymentMethod" value="cod" [checked]="paymentMethod() === 'cod'"
+                (change)="setPaymentMethod('cod')" />
+              <span class="payment-method-icon">
+                <span class="material-symbols-rounded">payments</span>
+              </span>
+              <div class="payment-method-content">
+                <span class="payment-method-title">Cash on Delivery</span>
+                <span class="payment-method-desc">Pay when you receive your order</span>
+              </div>
+              <span class="payment-method-check">
+                <span class="material-symbols-rounded">check_circle</span>
+              </span>
+            </label>
+          </div>
+
+          @if (paymentMethod() === 'card') {
+          <div class="payment-secure">
+            <span class="material-symbols-rounded">lock</span>
+            <span>Your payment info is secure and encrypted</span>
+          </div>
+          <form [formGroup]="paymentForm" class="checkout-form">
+            <div class="form-group">
+              <label>Cardholder Name *</label>
+              <input type="text" formControlName="cardName" placeholder="John Doe" />
+            </div>
+            <div class="form-group">
+              <label>Card Number *</label>
+              <div class="input-with-icon">
+                <input type="text" formControlName="cardNumber" placeholder="1234 5678 9012 3456" maxlength="16" />
+                <span class="material-symbols-rounded">credit_card</span>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Expiry Date *</label>
+                <input type="text" formControlName="expiry" placeholder="MM/YY" maxlength="5" />
+              </div>
+              <div class="form-group">
+                <label>CVV *</label>
+                <input type="text" formControlName="cvv" placeholder="123" maxlength="4" />
+              </div>
+            </div>
+          </form>
+          } @else {
+          <div class="cod-info">
+            <span class="material-symbols-rounded">info</span>
+            <div>
+              <strong>Cash on Delivery</strong>
+              <p>Please have the exact amount ready at the time of delivery. Our delivery partner will collect the
+                payment
+                in cash upon delivery of your order.</p>
+            </div>
+          </div>
+          }
+        </div>
+        }
+
+        <!-- Review Step -->
+        @if (currentStep() === 'review') {
+        <div class="checkout-section">
+          <h2>Review Your Order</h2>
+          <div class="review-block">
+            <div class="review-header">
+              <h3>Shipping Address</h3>
+              <button class="btn btn-ghost btn-sm" (click)="currentStep.set('shipping')">Edit</button>
+            </div>
+            <p>{{ shippingForm.value.firstName }} {{ shippingForm.value.lastName }}</p>
+            <p>{{ shippingForm.value.address }}, {{ shippingForm.value.city }}, {{ shippingForm.value.state }} {{
+              shippingForm.value.zip }}</p>
+            <p>{{ shippingForm.value.email }} | {{ shippingForm.value.phone }}</p>
+          </div>
+
+          <div class="review-block">
+            <div class="review-header">
+              <h3>Payment</h3>
+              <button class="btn btn-ghost btn-sm" (click)="currentStep.set('payment')">Edit</button>
+            </div>
+            @if (paymentMethod() === 'card') {
+            <p>Card ending in ****{{ paymentForm.value.cardNumber?.slice(-4) }}</p>
+            <p>{{ paymentForm.value.cardName }}</p>
+            } @else {
+            <p><span class="material-symbols-rounded cod-review-icon">payments</span> Cash on Delivery</p>
+            }
+          </div>
+
+          <div class="review-block">
+            <h3>Order Items</h3>
+            <div class="review-items">
+              @for (item of cartService.items(); track item.product.id) {
+              <div class="review-item">
+                <img [src]="item.product.images[0]" [alt]="item.product.name" />
+                <div class="review-item-info">
+                  <span>{{ item.product.name }}</span>
+                  <span class="text-muted">Qty: {{ item.quantity }}</span>
+                </div>
+                <span class="review-item-price">${{ (item.product.price * item.quantity).toFixed(2) }}</span>
+              </div>
+              }
+            </div>
+          </div>
+        </div>
+        }
+
+        <!-- Navigation Buttons -->
+        <div class="step-actions">
+          @if (currentStep() !== 'shipping') {
+          <button class="btn btn-outline" (click)="backStep()">
+            <span class="material-symbols-rounded">arrow_back</span>
+            Back
+          </button>
+          }
+          <div class="spacer"></div>
+          @if (currentStep() === 'review') {
+          <button class="btn btn-primary btn-lg" (click)="placeOrder()">
+            <span class="material-symbols-rounded">lock</span>
+            Place Order — ${{ cartService.total().toFixed(2) }}
+          </button>
+          } @else {
+          <button class="btn btn-primary btn-lg" (click)="nextStep()">
+            Continue
+            <span class="material-symbols-rounded">arrow_forward</span>
+          </button>
+          }
+        </div>
+      </div>
+
+      <!-- Order Summary Sidebar -->
+      <div class="checkout-sidebar" @fadeInRight>
+        <div class="summary-card">
+          <h3>Order Summary</h3>
+          <div class="summary-items">
+            @for (item of cartService.items(); track item.product.id) {
+            <div class="summary-item">
+              <div class="summary-item-image">
+                <img [src]="item.product.images[0]" [alt]="item.product.name" />
+                <span class="item-badge">{{ item.quantity }}</span>
+              </div>
+              <div class="summary-item-info">
+                <span class="summary-item-name">{{ item.product.name }}</span>
+                @if (item.selectedColor) { <span class="text-muted">Color: {{ item.selectedColor }}</span> }
+                @if (item.selectedSize) { <span class="text-muted">Size: {{ item.selectedSize }}</span> }
+              </div>
+              <span class="summary-item-price">${{ (item.product.price * item.quantity).toFixed(2) }}</span>
+            </div>
+            }
+          </div>
+          <div class="summary-rows">
+            <div class="summary-row">
+              <span>Subtotal</span>
+              <span>${{ cartService.subtotal().toFixed(2) }}</span>
+            </div>
+            @if (cartService.discount() > 0) {
+            <div class="summary-row discount">
+              <span>You Save</span>
+              <span>-${{ cartService.discount().toFixed(2) }}</span>
+            </div>
+            }
+            <div class="summary-row">
+              <span>Shipping</span>
+              <span class="free">Free</span>
+            </div>
+            <div class="summary-row total">
+              <span>Total</span>
+              <span>${{ cartService.total().toFixed(2) }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    } @else {
+    <!-- Success -->
+    <div class="success-section" @fadeInUp>
+      <div class="success-card">
+        <div class="success-icon">
+          <span class="material-symbols-rounded">check_circle</span>
+        </div>
+        <h2>Order Placed Successfully!</h2>
+        <p class="order-number">Order #{{ orderNumber() }}</p>
+        <p class="success-message">
+          Thank you for your purchase! We'll send you a confirmation email with your order details and tracking
+          information once your order ships.
+        </p>
+        <div class="success-actions">
+          <a routerLink="/products" class="btn btn-primary btn-lg">
+            Continue Shopping
+            <span class="material-symbols-rounded">arrow_forward</span>
+          </a>
+          <a routerLink="/" class="btn btn-outline btn-lg">Back to Home</a>
+        </div>
+      </div>
+    </div>
+    }
+  </div>
+</div>

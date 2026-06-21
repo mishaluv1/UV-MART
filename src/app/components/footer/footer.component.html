@@ -1,0 +1,87 @@
+<footer class="footer" @fadeIn>
+  <div class="footer-glow"></div>
+  <div class="container">
+    <div class="footer-grid">
+      <!-- Brand -->
+      <div class="footer-brand">
+        <a routerLink="/" class="footer-logo">
+          <span class="logo-icon">◆</span>
+          <span class="logo-text">UV-MART</span>
+        </a>
+        <p class="footer-desc">
+          Premium shopping experience with curated products from around the world. Fast delivery, easy returns, and
+          exceptional customer service.
+        </p>
+        <div class="footer-socials">
+          <a href="#" class="social-link" aria-label="Twitter">
+            <span class="material-symbols-rounded">chat</span>
+          </a>
+          <a href="#" class="social-link" aria-label="Instagram">
+            <span class="material-symbols-rounded">photo_camera</span>
+          </a>
+          <a href="#" class="social-link" aria-label="Facebook">
+            <span class="material-symbols-rounded">thumb_up</span>
+          </a>
+          <a href="#" class="social-link" aria-label="YouTube">
+            <span class="material-symbols-rounded">play_circle</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Shop -->
+      <div class="footer-col">
+        <h4>Shop</h4>
+        <a routerLink="/products" [queryParams]="{category: 'electronics'}">Electronics</a>
+        <a routerLink="/products" [queryParams]="{category: 'fashion'}">Fashion</a>
+        <a routerLink="/products" [queryParams]="{category: 'home-living'}">Home & Living</a>
+        <a routerLink="/products" [queryParams]="{category: 'sports'}">Sports</a>
+        <a routerLink="/products" [queryParams]="{category: 'beauty'}">Beauty</a>
+      </div>
+
+      <!-- Help -->
+      <div class="footer-col">
+        <h4>Help</h4>
+        <a href="#">Customer Service</a>
+        <a href="#">Track Order</a>
+        <a href="#">Returns & Exchanges</a>
+        <a href="#">Shipping Info</a>
+        <a href="#">FAQ</a>
+      </div>
+
+      <!-- Company -->
+      <div class="footer-col">
+        <h4>Company</h4>
+        <a href="#">About Us</a>
+        <a href="#">Careers</a>
+        <a href="#">Press</a>
+        <a href="#">Sustainability</a>
+        <a href="#">Affiliates</a>
+      </div>
+
+      <!-- Newsletter -->
+      <div class="footer-col footer-newsletter">
+        <h4>Stay Connected</h4>
+        <p>Subscribe for exclusive deals, new arrivals, and insider tips.</p>
+        <div class="newsletter-form">
+          <input type="email" placeholder="Enter your email" class="newsletter-input" />
+          <button class="btn btn-primary btn-sm">Subscribe</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>&copy; {{ currentYear }} UV-MART. All rights reserved.</p>
+      <div class="footer-bottom-links">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+        <a href="#">Cookie Policy</a>
+      </div>
+      <div class="footer-payments">
+        <span class="payment-icon">💳</span>
+        <span class="payment-icon">🏦</span>
+        <span class="payment-icon">📱</span>
+        <span class="payment-icon">₿</span>
+      </div>
+    </div>
+  </div>
+</footer>

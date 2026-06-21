@@ -1,0 +1,143 @@
+<div class="page-wrapper products-page">
+  <div class="container">
+    <!-- Breadcrumb -->
+    <div class="breadcrumb" @fadeIn>
+      <a routerLink="/">Home</a>
+      <span class="material-symbols-rounded">chevron_right</span>
+      <span>Products</span>
+      @if (selectedCategory !== 'all') {
+        <span class="material-symbols-rounded">chevron_right</span>
+        <span class="current">{{ selectedCategory }}</span>
+      }
+    </div>
+
+    <!-- Page Header -->
+    <div class="page-header" @fadeInUp>
+      <h1>
+        @if (selectedCategory !== 'all') {
+          {{ selectedCategory | titlecase }}
+        } @else {
+          All Products
+        }
+      </h1>
+      <span class="result-count">{{ filteredProducts().length }} products found</span>
+    </div>
+
+    <!-- Toolbar -->
+    <div class="toolbar" @fadeIn>
+      <div class="toolbar-left">
+        <button class="btn btn-ghost btn-sm filter-toggle" (click)="showFilters = !showFilters">
+          <span class="material-symbols-rounded">tune</span>
+          Filters
+        </button>
+        <div class="view-toggle">
+          <button class="view-btn" [class.active]="viewMode === 'grid'" (click)="viewMode = 'grid'">
+            <span class="material-symbols-rounded">grid_view</span>
+          </button>
+          <button class="view-btn" [class.active]="viewMode === 'list'" (click)="viewMode = 'list'">
+            <span class="material-symbols-rounded">view_list</span>
+          </button>
+        </div>
+      </div>
+      <div class="toolbar-right">
+        <div class="sort-select">
+          <span class="material-symbols-rounded">swap_vert</span>
+          <select [(ngModel)]="sortBy" (change)="applyFilters()">
+            @for (opt of sortOptions; track opt.value) {
+              <option [value]="opt.value">{{ opt.label }}</option>
+            }
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="products-layout">
+      <!-- Sidebar Filters -->
+      <aside class="filters-sidebar" [class.open]="showFilters" @fadeIn>
+        <div class="filters-header">
+          <h3>Filters</h3>
+          <button class="btn btn-ghost btn-sm" (click)="showFilters = false">
+            <span class="material-symbols-rounded">close</span>
+          </button>
+        </div>
+
+        <!-- Category Filter -->
+        <div class="filter-group">
+          <h4>Category</h4>
+          <div class="filter-list">
+            <button class="filter-option" [class.active]="selectedCategory === 'all'" (click)="setCategory('all')">
+              All Categories
+            </button>
+            @for (cat of categories; track cat.id) {
+              <button class="filter-option" [class.active]="selectedCategory === cat.slug" (click)="setCategory(cat.slug)">
+                <span class="cat-icon">{{ cat.icon }}</span>
+                {{ cat.name }}
+                <span class="cat-count">({{ cat.productCount }})</span>
+              </button>
+            }
+          </div>
+        </div>
+
+        <!-- Price Filter -->
+        <div class="filter-group">
+          <h4>Price Range</h4>
+          <div class="price-range">
+            <div class="range-values">
+              <span>${{ priceRange()[0] }}</span>
+              <span>${{ priceRange()[1] }}</span>
+            </div>
+            <input type="range" [min]="0" [max]="maxPrice" [ngModel]="priceRange()[0]"
+                   (input)="priceRange.set([+$any($event.target).value, priceRange()[1]]); applyFilters()" />
+            <input type="range" [min]="0" [max]="maxPrice" [ngModel]="priceRange()[1]"
+                   (input)="priceRange.set([priceRange()[0], +$any($event.target).value]); applyFilters()" />
+          </div>
+        </div>
+
+        <button class="btn btn-outline btn-sm clear-btn" (click)="clearFilters()">
+          <span class="material-symbols-rounded">restart_alt</span>
+          Clear All Filters
+        </button>
+      </aside>
+
+      <!-- Overlay for mobile -->
+      @if (showFilters) {
+        <div class="filter-overlay" (click)="showFilters = false" @fadeIn></div>
+      }
+
+      <!-- Products Grid -->
+      <main class="products-main">
+        @if (paginatedProducts().length === 0) {
+          <div class="no-results" @fadeIn>
+            <span class="material-symbols-rounded">search_off</span>
+            <h3>No Products Found</h3>
+            <p>Try adjusting your filters or search terms</p>
+            <button class="btn btn-primary" (click)="clearFilters()">Clear Filters</button>
+          </div>
+        } @else {
+          <div class="products-grid" [class.grid-view]="viewMode === 'grid'" [class.list-view]="viewMode === 'list'" @staggerList>
+            @for (product of paginatedProducts(); track product.id) {
+              <app-product-card [product]="product" />
+            }
+          </div>
+
+          <!-- Pagination -->
+          @if (totalPages() > 1) {
+            <div class="pagination" @fadeInUp>
+              <button class="page-btn" [class.disabled]="currentPage === 1" (click)="goToPage(currentPage - 1)">
+                <span class="material-symbols-rounded">chevron_left</span>
+              </button>
+              @for (page of getPageNumbers(); track page) {
+                <button class="page-btn" [class.active]="currentPage === page" (click)="goToPage(page)">
+                  {{ page }}
+                </button>
+              }
+              <button class="page-btn" [class.disabled]="currentPage === totalPages()" (click)="goToPage(currentPage + 1)">
+                <span class="material-symbols-rounded">chevron_right</span>
+              </button>
+            </div>
+          }
+        }
+      </main>
+    </div>
+  </div>
+</div>
